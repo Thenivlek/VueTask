@@ -1,12 +1,17 @@
 <template>
-  <ul class="task-list">
+  <TransitionGroup name="fade" tag="ul" class="task-list">
     <li v-for="task in tasks" :key="task.id" class="task-item">
-      <input v-model="task.name" @blur="editTask(task)" class="task-input" />
+      <input
+        v-model="task.name"
+        @blur="editTask(task)"
+        @keyup.enter="editTask(task)"
+        class="task-input"
+      />
       <button @click="deleteTask(task.id)" class="delete-button">
         Excluir
       </button>
     </li>
-  </ul>
+  </TransitionGroup>
 </template>
 
 <script>
@@ -28,13 +33,16 @@ export default {
     const fetchTasks = async () => {
       try {
         const querySnapshot = await getDocs(collection($db, "tasks"));
+
         if (querySnapshot.empty) {
           console.log("Nenhuma tarefa encontrada.");
         } else {
-          tasks.value = querySnapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
+          tasks.value = querySnapshot.docs
+            .map((doc) => ({
+              id: doc.id,
+              ...doc.data(),
+            }))
+            .sort((a, b) => a.name.localeCompare(b.name)); // Ordena as tarefas por ordem alfabética
         }
       } catch (error) {
         console.error("Erro ao buscar tarefas:", error);
@@ -104,7 +112,7 @@ export default {
   padding: 5px;
   border: none;
   background: none;
-  font-size: 16px;
+  font-size: 1.2rem;
 }
 
 .delete-button {
@@ -115,9 +123,26 @@ export default {
   padding: 5px 10px;
   cursor: pointer;
   transition: background-color 0.3s;
+  font-size: 1.2rem;
 }
 
 .delete-button:hover {
   background-color: #cc0000;
+}
+
+/* Transições */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+.fade-enter-to,
+.fade-leave-from {
+  opacity: 1;
+  transform: translateY(0);
 }
 </style>

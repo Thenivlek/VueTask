@@ -7,7 +7,6 @@
 
 <script>
 import AddTaskVue from "~/components/AddTask.vue";
-
 import TaskList from "~/components/TaskList.vue";
 
 export default {
@@ -20,7 +19,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .container {
   max-width: 600px;
   margin: 0 auto;

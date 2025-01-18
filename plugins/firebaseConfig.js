@@ -1,5 +1,4 @@
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -13,10 +12,10 @@ const firebaseConfig = {
 };
 
 export default defineNuxtPlugin((nuxtApp) => {
-  // Inicialize o Firebase
+  // Inicializa o FireStore.
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  // Torne o Firestore acessível globalmente
+  // Acesso Global.
   nuxtApp.provide("db", db);
 });
